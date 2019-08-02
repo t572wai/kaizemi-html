@@ -28,13 +28,21 @@
 							text: "追加",
 							click: function () {
 								let newPlayerName = $('#newPlayerName').val();
-								if(newPlayerName!=null && newPlayerName!=""){
+								if(1==canAddPlayer()){
 									players.push(newPlayerName);
-									rates[newPlayerName]=$('#newPlayerRate').val();
+									let newPlayerRate = $('#newPlayerRate').val();
+									if(Number.isInteger(parseFloat(newPlayerRate))){
+										newPlayerRate = Math.floor(newPlayerRate);
+										newPlayerRate+='.0';
+									}
+									rates[newPlayerName]=newPlayerRate;
 									$(this).dialog('close');
 									updateDate();
+									$('#newPlayerName').attr('value','');
+									$('#newPlayerRate').attr('value',1.0);
 								}else {
 									console.log(newPlayerName);
+									$('#CannotAddPlayerDialog').text('プレイヤーを追加できません')
 									$('#CannotAddPlayerDialog').dialog('open');
 								}
 							}
@@ -49,32 +57,46 @@
 					playersHTML += '<li>'+name+'</li>';
 				}
 				players.sort(function (a,b) {
-					if(rates[a]<rates[b]) return -1;
-					if(rates[a]>rates[b]) return 1;
-					return 0;
+					if(rates[a]>=rates[b]){
+						return -1;
+					}else {
+						return 1;
+					}
 				});
 				console.log(rates);
 				console.log(players);
 				let ratesHTML = "";
 				let i = 1;
 				let beforeRate = 0;
+				let ran = 0;
 				for(name of players){
-					let rank;
 					if(beforeRate!=rates[name]){
-						rank = i++;
+						rank = i;
 					}else {
-						rank = --i;
-						i++;
+						rank;
 					}
-					beforeRate = rates;
+					i++;
+					beforeRate = rates[name];
 					ratesHTML += rank + '位:' + name + " レート:" + rates[name] + '<br>';
 				}
 				$('#rates').html(ratesHTML);
 				$('#players').html(playersHTML);
 			}
 
+			function updateRate() {
+
+			}
+
 			function addPlayer() {
 				$('#addPlayerDialog').dialog('open');
+			}
+
+			function canAddPlayer() {
+				if(newPlayerName == null || newPlayerName == "")return 0;
+				for (name of players) {
+					if(name==newPlayerName)return 0;
+				}
+				return 1;
 			}
 		</script>
 		<style>
@@ -89,8 +111,9 @@
 
 		<div id="rates">
 		</div>
-		<ul id="players">
-		</ul>
+		<ol id="players">
+		</ol>
+		<button id="setRate" onclick="updateRate();">レート更新</button>
 
 		<div id="addPlayerDialog" class="Dialog" title="プレイヤーの追加">
 			プレイヤーを追加<br>
@@ -99,7 +122,6 @@
 		</div>
 
 		<div id="CannotAddPlayerDialog" class="Dialog" title="エラー">
-			プレイヤーを追加できません
 		</div>
 	</body>
 </html>
