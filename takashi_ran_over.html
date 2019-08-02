@@ -16,6 +16,10 @@
 			});
 
 			$(function () {
+				$("#CannotAddPlayerDialog").dialog({
+					autoOpen:false,
+					modal:false
+				})
 				$('#addPlayerDialog').dialog({
 					autoOpen: false,
 					modal: true,
@@ -31,15 +35,11 @@
 									updateDate();
 								}else {
 									console.log(newPlayerName);
-									$('#CannottAddPlayerDialog').dialog('open');
+									$('#CannotAddPlayerDialog').dialog('open');
 								}
 							}
 						}
 					]
-				})
-				$("#CannotAddPlayerDialog").dialog({
-					autoOpen:false,
-					modal:false
 				})
 			})
 
@@ -48,6 +48,18 @@
 				for (name of players) {
 					playersHTML += '<li>'+name+'</li>';
 				}
+				rates.sort(function (a,b) {
+					if(a<b) return -1;
+					if(a>b) return 1;
+					return 0;
+				});
+				console.log(rates);
+				let ratesHTML = "";
+				let i = 1;
+				for(rate in rates){
+					ratesHTML += i++ + rate + rates[rate];
+				}
+				$('#rates').html(ratesHTML);
 				$('#players').html(playersHTML);
 			}
 
