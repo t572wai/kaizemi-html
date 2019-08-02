@@ -11,6 +11,7 @@
 			let players = new Array();
 
 			$(function () {
+				console.log("start");
 				$('#players').sortable();
 			});
 
@@ -29,6 +30,7 @@
 									$(this).dialog('close');
 									updateDate();
 								}else {
+									console.log(newPlayerName);
 									$('#CannottAddPlayerDialog').dialog('open');
 								}
 							}
