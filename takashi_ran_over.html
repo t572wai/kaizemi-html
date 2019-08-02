@@ -48,16 +48,26 @@
 				for (name of players) {
 					playersHTML += '<li>'+name+'</li>';
 				}
-				rates.sort(function (a,b) {
-					if(a<b) return -1;
-					if(a>b) return 1;
+				players.sort(function (a,b) {
+					if(rates[a]<rates[b]) return -1;
+					if(rates[a]>rates[b]) return 1;
 					return 0;
 				});
 				console.log(rates);
+				console.log(players);
 				let ratesHTML = "";
 				let i = 1;
-				for(rate in rates){
-					ratesHTML += i++ + rate + rates[rate];
+				let beforeRate = 0;
+				for(name of players){
+					let rank;
+					if(beforeRate!=rates[name]){
+						rank = i++;
+					}else {
+						rank = --i;
+						i++;
+					}
+					beforeRate = rates;
+					ratesHTML += rank + '位:' + name + " レート:" + rates[name] + '<br>';
 				}
 				$('#rates').html(ratesHTML);
 				$('#players').html(playersHTML);
@@ -77,8 +87,8 @@
 		<h1>轢きたかし用レート計算機</h1>
 		<button type="button" onclick="addPlayer();">プレイヤーの追加</button>
 
-		<ul id="rates">
-		</ul>
+		<div id="rates">
+		</div>
 		<ul id="players">
 		</ul>
 
