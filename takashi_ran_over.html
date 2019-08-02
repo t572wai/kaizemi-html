@@ -80,6 +80,10 @@
 					}
 					i++;
 					beforeRate = rates[name];
+					if(Number.isInteger(parseFloat(rates[name]))){
+						rates[name] = Math.floor(rates[name]);
+						rates[name]+='.0';
+					}
 					ratesHTML += rank + '位:' + name + " レート:" + rates[name] + '<br>';
 				}
 				$('#rates').html(ratesHTML);
@@ -100,7 +104,7 @@
 					}
 					$('#players > li').each(function (index, element) {
 						rates[$(element).text()]=parseFloat(rates[$(element).text()])+parseFloat(rateUGOKU[index]);
-						console.log(element,index);
+						console.log(element,index,rateUGOKU[index],rates[$(element).text()]);
 					})
 					updateDate();
 				}else {
