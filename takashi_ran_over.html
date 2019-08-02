@@ -28,7 +28,7 @@
 							text: "追加",
 							click: function () {
 								let newPlayerName = $('#newPlayerName').val();
-								if(1==canAddPlayer()){
+								if(1==canAddPlayer(newPlayerName)){
 									players.push(newPlayerName);
 									let newPlayerRate = $('#newPlayerRate').val();
 									if(Number.isInteger(parseFloat(newPlayerRate))){
@@ -36,9 +36,9 @@
 										newPlayerRate+='.0';
 									}
 									rates[newPlayerName]=newPlayerRate;
+									$('#newPlayerName').val("");
 									$(this).dialog('close');
 									updateDate();
-									$('#newPlayerName').attr('value','');
 									$('#newPlayerRate').attr('value',1.0);
 								}else {
 									console.log(newPlayerName);
@@ -84,6 +84,26 @@
 			}
 
 			function updateRate() {
+				let n = players.length;
+				let rateUGOKU;
+				if(n>3 && n<10){
+					switch (n) {
+						case 9:rateUGOKU = [0.7,0.4,0.2,0.1,0.0,-0.1,-0.2,-0.4,-0.7];break;
+						case 8:rateUGOKU = [0.7,0.4,0.2,0.1,-0.1,-0.2,-0.4,-0.7];break;
+						case 7:rateUGOKU = [0.7,0.3,0.1,0.0,-0.1,-0.3,-0.7];break;
+						case 6:rateUGOKU = [0.7,0.3,0.1,-0.1,-0.3,-0.7];break;
+						case 5:rateUGOKU = [0.7,0.3,0.0,-0.3,-0.7];break;
+						case 4:rateUGOKU = [0.7,0.3,-0.3,-0.7];break;
+					}
+					$('#players > li').each(function (index, element) {
+						rates[element]+=rateUGOKU[index];
+						console.log(element,index);
+					})
+					updateDate();
+				}else {
+					$('#CannotAddPlayerDialog').text('不正な人数です');
+					$('#CannotAddPlayerDialog').dialog('open');
+				}
 
 			}
 
@@ -91,7 +111,7 @@
 				$('#addPlayerDialog').dialog('open');
 			}
 
-			function canAddPlayer() {
+			function canAddPlayer(newPlayerName) {
 				if(newPlayerName == null || newPlayerName == "")return 0;
 				for (name of players) {
 					if(name==newPlayerName)return 0;
