@@ -29,13 +29,13 @@
 									$(this).dialog('close');
 									updateDate();
 								}else {
-									$('#Can\'tAddPlayerDialog').dialog('open');
+									$('#CannottAddPlayerDialog').dialog('open');
 								}
 							}
 						}
 					]
 				})
-				$("#Can'tAddPlayerDialog").dialog({
+				$("#CannotAddPlayerDialog").dialog({
 					autoOpen:false,
 					modal:false
 				})
@@ -74,7 +74,7 @@
 			レート<input type="number" value="1.0" step="0.1" id="newPlayerRate">
 		</div>
 
-		<div id="Can'tAddPlayerDialog" class="Dialog" title="エラー">
+		<div id="CannotAddPlayerDialog" class="Dialog" title="エラー">
 			プレイヤーを追加できません
 		</div>
 	</body>
