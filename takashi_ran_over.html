@@ -7,19 +7,75 @@
 		<script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
 		<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
 		<script type="text/javascript">
+			let rates = {};
+			let players = new Array();
+
 			$(function () {
 				$('#players').sortable();
+			});
+
+			$(function () {
+				$('#addPlayerDialog').dialog({
+					autoOpen: false,
+					modal: true,
+					buttons: [
+						{
+							text: "追加",
+							click: function () {
+								let newPlayerName = $('#newPlayerName').val();
+								if(newPlayerName!=null && newPlayerName!=""){
+									players.push(newPlayerName);
+									rates[newPlayerName]=$('#newPlayerRate').val();
+									$(this).dialog('close');
+									updateDate();
+								}else {
+									$('#Can\'tAddPlayerDialog').dialog('open');
+								}
+							}
+						}
+					]
+				})
+				$("#Can'tAddPlayerDialog").dialog({
+					autoOpen:false,
+					modal:false
+				})
 			})
+
+			function updateDate() {
+				let playersHTML = "";
+				for (name of players) {
+					playersHTML += '<li>'+name+'</li>';
+				}
+				$('#players').html(playersHTML);
+			}
+
+			function addPlayer() {
+				$('#addPlayerDialog').dialog('open');
+			}
 		</script>
+		<style>
+			.Dialog{
+				display: none;
+			}
+		</style>
 	</head>
 	<body>
 		<h1>轢きたかし用レート計算機</h1>
-		<ul id="players">
-			<li><input type="">いつき</li>
-			<li>ずん</li>
-			<li>たき</li>
-			<li>りおん</li>
-			<li>三橋</li>
+		<button type="button" onclick="addPlayer();">プレイヤーの追加</button>
+
+		<ul id="rates">
 		</ul>
+		<ul id="players">
+		</ul>
+
+		<div id="addPlayerDialog" class="Dialog" title="プレイヤーの追加">
+			プレイヤーを追加<br>
+			名前　<input type="text" value="" id="newPlayerName"><br>
+			レート<input type="number" value="1.0" step="0.1" id="newPlayerRate">
+		</div>
+
+		<div id="Can'tAddPlayerDialog" class="Dialog" title="エラー">
+			プレイヤーを追加できません
+		</div>
 	</body>
 </html>
