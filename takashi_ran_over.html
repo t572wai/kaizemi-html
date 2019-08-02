@@ -15,7 +15,8 @@
 			$(function () {
 				console.log("start");
 				$('.takashi').sortable({
-					connectWith:'.takashi'
+					connectWith:'.takashi',
+					items: ">*:not(.hidden)"
 				});
 			});
 
@@ -89,11 +90,12 @@
 					ratesHTML += rank + '位:' + name + " レート:" + rates[name] + '<br>';
 				}
 				$('#rates').html(ratesHTML);
-				$('#players').html(playersHTML);
+				$('#players').html(playersHTML+"<li class='hidden'>&nbsp;</li>");
+				$('#hayashi').html('<li class="hidden">&emsp;</li>')
 			}
 
 			function updateRate() {
-				let n = players.length;
+				let n = $('#players > *').length-1;
 				let rateUGOKU;
 				if(n>3 && n<10){
 					switch (n) {
@@ -144,6 +146,10 @@
 				width: 400px;
 				word-wrap: break-word;
 			}
+			.hidden{
+				outline: none;
+				list-style: none;
+			}
 		</style>
 	</head>
 	<body>
@@ -158,7 +164,7 @@
 		<br>
 		<span>不参加の人</span>
 		<ul id="hayashi" class="takashi">
-			<li>a</li>
+			<li class="hidden">&emsp;</li>
 		</ul>
 		<button id="setRate" onclick="updateRate();">レート更新</button>
 
