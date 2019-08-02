@@ -103,7 +103,7 @@
 						case 4:rateUGOKU = [0.7,0.3,-0.3,-0.7];break;
 					}
 					$('#players > li').each(function (index, element) {
-						rates[$(element).text()]=Math.round(parseFloat((rates[$(element).text()])+parseFloat(rateUGOKU[index]))*10)/10;
+						rates[$(element).text()]=Math.round((parseFloat(rates[$(element).text()])+parseFloat(rateUGOKU[index]))*10)/10;
 						console.log(element,index,rateUGOKU[index],rates[$(element).text()]);
 					})
 					updateDate();
