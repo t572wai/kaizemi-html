@@ -22,6 +22,7 @@
 
 			$(function () {
 				console.log("start");
+				$('#ratesUGOKU').html(JSON.stringify(rateUGOKU).split('],').join(']<br>').replace(/{|}|"/g,'').replace(/:/g,'人:'));
 				$('.takashi').sortable({
 					connectWith:'.takashi',
 					items: ">*:not(.hidden)"
@@ -122,15 +123,16 @@
 			}
 
 			function updateRate() {
-				let n = $('#players > *').length;
+				let n = $('#players > *').length-1;
 				// let rateUGOKU;
 				console.log(n);
-				if(n-1>=Math.min.apply(null,rateUGOKU) && n-1<=Math.max.apply(null,rateUGOKU)){
+				console.log(Object.keys(rateUGOKU),Object.keys(rateUGOKU).indexOf(""+n));
+				if(Object.keys(rateUGOKU).indexOf(""+n) >= 0){
 					// console.log(rateUGOKU);
 					$('#players > li').each(function (index, element) {
 							rates[$(element).text()]
 							=parseFloat(rates[$(element).text()])
-							+parseFloat(rateUGOKU[n-1][parseInt(index)-1]);
+							+parseFloat(rateUGOKU[n][parseInt(index)-1]);
 							// console.log(element,index,rateUGOKU[index],rates[$(element).text()]);
 							rates[$(element).text()]=Math.round(parseFloat(rates[$(element).text()])*10)/10;
 					})
@@ -145,6 +147,7 @@
 			function updateALL(){
 				updateRank();
 				updateNowGameRank();
+				$('#ratesUGOKU').html(JSON.stringify(rateUGOKU).split('],').join(']<br>').replace(/{|}|"/g,'').replace(/:/g,'人:'));
 			}
 
 			function addPlayer() {
@@ -160,7 +163,7 @@
 			}
 
 			function dataToText() {
-				$('#DataToText').text(JSON.stringify(rates)+';'+JSON.stringify(players));
+				$('#DataToText').text(JSON.stringify(rates)+';'+JSON.stringify(players) + ';' + JSON.stringify(rateUGOKU));
 				$('#DataToTextDialog').dialog('open');
 			}
 
@@ -168,6 +171,7 @@
 				let data = $('#TextToData').val();
 				rates = JSON.parse(data.split(';')[0]);
 				players = JSON.parse(data.split(';')[1]);
+				rateUGOKU = JSON.parse(data.split(';')[2]);
 				updateALL();
 			}
 		</script>
@@ -221,6 +225,7 @@
 			</div>
 			<span>参加した人の順位</span>
 			<ol id="players" class="takashi">
+				<li class='hidden' value='0'>&nbsp;</li>
 			</ol>
 			<br>
 			<span>不参加の人</span>
@@ -228,13 +233,13 @@
 				<li class="hidden">&emsp;</li>
 			</ul>
 			<button id="setRate" onclick="updateRate();">レート更新</button><br>
-			レート<p>
-				9:[0.7,0.4,0.2,0.1,0.0,-0.1,-0.2,-0.4,-0.7]<br>
+			レート<p id="ratesUGOKU">
+				<!-- 9:[0.7,0.4,0.2,0.1,0.0,-0.1,-0.2,-0.4,-0.7]<br>
 				8:[0.7,0.4,0.2,0.1,-0.1,-0.2,-0.4,-0.7]<br>
 				7:[0.7,0.3,0.1,0.0,-0.1,-0.3,-0.7]<br>
 				6:[0.7,0.3,0.1,-0.1,-0.3,-0.7]<br>
 				5:[0.7,0.3,0.0,-0.3,-0.7]<br>
-				4:[0.7,0.3,-0.3,-0.7]
+				4:[0.7,0.3,-0.3,-0.7] -->
 		</p>
 	</p>
 		<button id="settingButton" onclick="$('#SettingDialog').dialog('open');">
