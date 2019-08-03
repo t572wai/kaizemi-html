@@ -11,6 +11,14 @@
 		<script type="text/javascript">
 			let rates = {};
 			let players = new Array();
+			let rateUGOKU = {
+				9:[0.7,0.4,0.2,0.1,0.0,-0.1,-0.2,-0.4,-0.7],
+				8:[0.7,0.4,0.2,0.1,-0.1,-0.2,-0.4,-0.7],
+				7:[0.7,0.3,0.1,0.0,-0.1,-0.3,-0.7],
+				6:[0.7,0.3,0.1,-0.1,-0.3,-0.7],
+				5:[0.7,0.3,0.0,-0.3,-0.7],
+				4:[0.7,0.3,-0.3,-0.7]
+			}
 
 			$(function () {
 				console.log("start");
@@ -28,7 +36,7 @@
 				$('#addPlayerDialog').dialog({
 					autoOpen: false,
 					modal: true,
-					width:440,
+					width:450,
 					buttons: [
 						{
 							text: "追加",
@@ -44,7 +52,8 @@
 									rates[newPlayerName]=newPlayerRate;
 									$('#newPlayerName').val("");
 									$(this).dialog('close');
-									updateDate();
+									$('#players').append('<li>'+newPlayerName+'</li>');
+									updateRank();
 									$('#newPlayerRate').attr('value',1.0);
 								}else {
 									console.log(newPlayerName);
@@ -54,14 +63,34 @@
 							}
 						}
 					]
-				})
-			})
+				});
+				$('#SettingDialog').dialog({
+					autoOpen:false,
+					modal:true,
+					width:550
+				});
+				$('#DataToTextDialog').dialog({
+					autoOpen:false,
+					modal:false,
+					width:400
+				});
+				$('#TextToDataDialog').dialog({
+					autoOpen:false,
+					modal:false,
+					width:400
+				});
+			});
 
-			function updateDate() {
-				let playersHTML = "";
+			function updateNowGameRank() {
+				let playersHTML = "<li class='hidden' value='0'>&nbsp;</li>";
 				for (name of players) {
 					playersHTML += '<li>'+name+'</li>';
 				}
+				$('#players').html(playersHTML);
+				$('#hayashi').html('<li class="hidden">&emsp;</li>')
+			}
+
+			function updateRank() {
 				players.sort(function (a,b) {
 					if(rates[a]>=rates[b]){
 						return -1;
@@ -90,28 +119,22 @@
 					ratesHTML += rank + '位:' + name + " レート:" + rates[name] + '<br>';
 				}
 				$('#rates').html(ratesHTML);
-				$('#players').html(playersHTML+"<li class='hidden'>&nbsp;</li>");
-				$('#hayashi').html('<li class="hidden">&emsp;</li>')
 			}
 
 			function updateRate() {
-				let n = $('#players > *').length-1;
-				let rateUGOKU;
-				if(n>3 && n<10){
-					switch (n) {
-						case 9:rateUGOKU = [0.7,0.4,0.2,0.1,0.0,-0.1,-0.2,-0.4,-0.7];break;
-						case 8:rateUGOKU = [0.7,0.4,0.2,0.1,-0.1,-0.2,-0.4,-0.7];break;
-						case 7:rateUGOKU = [0.7,0.3,0.1,0.0,-0.1,-0.3,-0.7];break;
-						case 6:rateUGOKU = [0.7,0.3,0.1,-0.1,-0.3,-0.7];break;
-						case 5:rateUGOKU = [0.7,0.3,0.0,-0.3,-0.7];break;
-						case 4:rateUGOKU = [0.7,0.3,-0.3,-0.7];break;
-					}
+				let n = $('#players > *').length;
+				// let rateUGOKU;
+				console.log(n);
+				if(n-1>3 && n-1<10){
+					// console.log(rateUGOKU);
 					$('#players > li').each(function (index, element) {
-						rates[$(element).text()]=parseFloat(rates[$(element).text()])+parseFloat(rateUGOKU[index]);
-						console.log(element,index,rateUGOKU[index],rates[$(element).text()]);
-						rates[$(element).text()]=Math.round(parseFloat(rates[$(element).text()])*10)/10
+							rates[$(element).text()]
+							=parseFloat(rates[$(element).text()])
+							+parseFloat(rateUGOKU[n-1][parseInt(index)-1]);
+							// console.log(element,index,rateUGOKU[index],rates[$(element).text()]);
+							rates[$(element).text()]=Math.round(parseFloat(rates[$(element).text()])*10)/10;
 					})
-					updateDate();
+					updateRank();
 				}else {
 					$('#CannotAddPlayerDialog').text('不正な人数です');
 					$('#CannotAddPlayerDialog').dialog('open');
@@ -119,16 +142,33 @@
 
 			}
 
+			function updateALL(){
+				updateRank();
+				updateNowGameRank();
+			}
+
 			function addPlayer() {
 				$('#addPlayerDialog').dialog('open');
 			}
 
 			function canAddPlayer(newPlayerName) {
-				if(newPlayerName == null || newPlayerName == "")return 0;
+				if(newPlayerName == null || newPlayerName == "" || newPlayerName.match(/;/))return 0;
 				for (name of players) {
 					if(name==newPlayerName)return 0;
 				}
 				return 1;
+			}
+
+			function dataToText() {
+				$('#DataToText').text(JSON.stringify(rates)+';'+JSON.stringify(players));
+				$('#DataToTextDialog').dialog('open');
+			}
+
+			function textToData() {
+				let data = $('#TextToData').val();
+				rates = JSON.parse(data.split(';')[0]);
+				players = JSON.parse(data.split(';')[1]);
+				updateALL();
 			}
 		</script>
 		<style>
@@ -162,31 +202,45 @@
 				background-color: white;
 
 			}
+			#settingButton{
+				color: black;
+				position: fixed;
+				top:200px;
+				right: 70px;
+				float: center;
+				padding-top: 5px;
+			}
 		</style>
 	</head>
 	<body>
 		<h1>轢きたかし用レート計算機</h1>
-		<button type="button" onclick="addPlayer();">プレイヤーの追加</button>
+		<p>
+			<button type="button" onclick="addPlayer();">プレイヤーの追加</button>
 
-		<div id="rates">
-		</div>
-		<span>参加した人の順位</span>
-		<ol id="players" class="takashi">
-		</ol>
-		<br>
-		<span>不参加の人</span>
-		<ul id="hayashi" class="takashi">
-			<li class="hidden">&emsp;</li>
-		</ul>
-		<button id="setRate" onclick="updateRate();">レート更新</button><br>
-		レート<p>
-		9:[0.7,0.4,0.2,0.1,0.0,-0.1,-0.2,-0.4,-0.7]<br>
-		8:[0.7,0.4,0.2,0.1,-0.1,-0.2,-0.4,-0.7]<br>
-		7:[0.7,0.3,0.1,0.0,-0.1,-0.3,-0.7]<br>
-		6:[0.7,0.3,0.1,-0.1,-0.3,-0.7]<br>
-		5:[0.7,0.3,0.0,-0.3,-0.7]<br>
-		4:[0.7,0.3,-0.3,-0.7]
+			<div id="rates">
+			</div>
+			<span>参加した人の順位</span>
+			<ol id="players" class="takashi">
+			</ol>
+			<br>
+			<span>不参加の人</span>
+			<ul id="hayashi" class="takashi">
+				<li class="hidden">&emsp;</li>
+			</ul>
+			<button id="setRate" onclick="updateRate();">レート更新</button><br>
+			レート<p>
+				9:[0.7,0.4,0.2,0.1,0.0,-0.1,-0.2,-0.4,-0.7]<br>
+				8:[0.7,0.4,0.2,0.1,-0.1,-0.2,-0.4,-0.7]<br>
+				7:[0.7,0.3,0.1,0.0,-0.1,-0.3,-0.7]<br>
+				6:[0.7,0.3,0.1,-0.1,-0.3,-0.7]<br>
+				5:[0.7,0.3,0.0,-0.3,-0.7]<br>
+				4:[0.7,0.3,-0.3,-0.7]
+		</p>
 	</p>
+		<button id="settingButton" onclick="$('#SettingDialog').dialog('open');">
+			<img src="./cog.png">
+		</button>
+
 		<div id="addPlayerDialog" class="Dialog" title="プレイヤーの追加">
 			プレイヤーを追加<br>
 			名前　<input type="text" value="" id="newPlayerName"><br>
@@ -195,6 +249,20 @@
 
 
 		<div id="CannotAddPlayerDialog" class="Dialog" title="エラー">
+		</div>
+
+		<div id="SettingDialog" class="Dialog" title="設定">
+			<button onclick="$('#TextToDataDialog').dialog('open')">データ読み込み</button>
+			<button onclick="dataToText()">データ書き出し</button>
+		</div>
+
+		<div id="DataToTextDialog" class="Dialog"  title="データ">
+			<textarea rows="1" readonly id="DataToText"></textarea>
+		</div>
+
+		<div id='TextToDataDialog' class="Dialog" title="データ">
+			<input type="text" value="" id="TextToData">
+			<button id="ChangeText" onclick="$('#TextToDataDialog').dialog('close');textToData();">読み込み</button>
 		</div>
 	</body>
 </html>
