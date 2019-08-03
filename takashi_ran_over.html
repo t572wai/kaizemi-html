@@ -27,7 +27,7 @@
 					connectWith:'.takashi',
 					items: ">*:not(.hidden)"
 				});
-				$('#TextToData').focus(function(){
+				$('#TextToData').on('click',function(){
 							$(this).select();
 					});
 			});
