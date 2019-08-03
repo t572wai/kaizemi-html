@@ -27,6 +27,13 @@
 					connectWith:'.takashi',
 					items: ">*:not(.hidden)"
 				});
+				$('#DataToText').blur(function () {
+					$(this).focus();
+					$(this).attr('readonly',true);
+					setTimeout(function () {
+						$('#DataToText').attr('readonly',false);
+					},10);
+				})
 			});
 
 			$(function () {
@@ -266,8 +273,8 @@
 			<button onclick="dataToText()">データ書き出し</button>
 		</div>
 
-		<div id="DataToTextDialog" class="Dialog"  title="データ" click="$('#DataToText').focus();">
-			<textarea rows="1" id="DataToText"></textarea>
+		<div id="DataToTextDialog" class="Dialog"  title="データ">
+			<textarea rows="1" id="DataToText" click="$('#DataToText').focus();"></textarea>
 		</div>
 
 		<div id='TextToDataDialog' class="Dialog" title="データ">
