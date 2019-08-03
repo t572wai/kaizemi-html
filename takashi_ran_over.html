@@ -165,9 +165,9 @@
 			function dataToText() {
 				$('#DataToText').text(JSON.stringify(rates)+';'+JSON.stringify(players) + ';' + JSON.stringify(rateUGOKU));
 				$('#DataToTextDialog').dialog('open');
-				$('#DataToText').on('click',function(){
-							$(this).select();
-				});
+				// $('#DataToText').on('click',function(){
+							$('#DataToText').select();
+				// });
 			}
 
 			function textToData() {
