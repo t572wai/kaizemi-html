@@ -125,7 +125,7 @@
 				let n = $('#players > *').length;
 				// let rateUGOKU;
 				console.log(n);
-				if(n-1>3 && n-1<10){
+				if(n-1>=Math.min.apply(null,rateUGOKU) && n-1<=Math.max.apply(null,rateUGOKU)){
 					// console.log(rateUGOKU);
 					$('#players > li').each(function (index, element) {
 							rates[$(element).text()]
