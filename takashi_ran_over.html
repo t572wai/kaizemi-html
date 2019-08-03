@@ -27,9 +27,6 @@
 					connectWith:'.takashi',
 					items: ">*:not(.hidden)"
 				});
-				$('#TextToData').on('click',function(){
-							$(this).select();
-					});
 			});
 
 			$(function () {
@@ -168,6 +165,9 @@
 			function dataToText() {
 				$('#DataToText').text(JSON.stringify(rates)+';'+JSON.stringify(players) + ';' + JSON.stringify(rateUGOKU));
 				$('#DataToTextDialog').dialog('open');
+				$('#DataToText').on('click',function(){
+							$(this).select();
+				});
 			}
 
 			function textToData() {
