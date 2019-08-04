@@ -7,11 +7,12 @@
 		<script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
 		<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
+		<script src="clipboard.js-master/dist/clipboard.min.js"></script>
 		<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/redmond/jquery-ui.css">
 		<script type="text/javascript">
 			let rates = {};
 			let players = new Array();
-			let rateUGOKU = {
+			let rateUGOKUfirst = {
 				9:[0.7,0.4,0.2,0.1,0.0,-0.1,-0.2,-0.4,-0.7],
 				8:[0.7,0.4,0.2,0.1,-0.1,-0.2,-0.4,-0.7],
 				7:[0.7,0.3,0.1,0.0,-0.1,-0.3,-0.7],
@@ -19,6 +20,7 @@
 				5:[0.7,0.3,0.0,-0.3,-0.7],
 				4:[0.7,0.3,-0.3,-0.7]
 			}
+			let rateUGOKU = JSON.parse(JSON.stringify(rateUGOKUfirst));
 
 			$(function () {
 				console.log("start");
@@ -183,8 +185,23 @@
 				let data = $('#TextToData').val();
 				rates = JSON.parse(data.split(';')[0]);
 				players = JSON.parse(data.split(';')[1]);
-				rateUGOKU = JSON.parse(data.split(';')[2]);
+				try {
+					rateUGOKU = JSON.parse(data.split(';')[2]);
+					console.log(rateUGOKU);
+					if (rateUGOKU==null ) {
+						rateUGOKU = JSON.parse(JSON.stringify(rateUGOKUfirst));
+						console.log(rateUGOKU);
+					}
+				} catch (e) {
+					rateUGOKU = JSON.parse(JSON.stringify(rateUGOKUfirst));
+				}
 				updateALL();
+			}
+
+			function textToDataDialogOpen() {
+				$('#TextToDataDialog').dialog('open');
+				$('#TextToData').focus();
+				document.execCommand("paste")
 			}
 		</script>
 		<style>
@@ -269,12 +286,12 @@
 		</div>
 
 		<div id="SettingDialog" class="Dialog" title="設定">
-			<button onclick="$('#TextToDataDialog').dialog('open')">データ読み込み</button>
+			<button onclick="textToDataDialogOpen()">データ読み込み</button>
 			<button onclick="dataToText()">データ書き出し</button>
 		</div>
 
 		<div id="DataToTextDialog" class="Dialog"  title="データ">
-			<textarea rows="1" id="DataToText" click="$('#DataToText').focus();"></textarea>
+			<textarea rows="1" id="DataToText"></textarea>
 		</div>
 
 		<div id='TextToDataDialog' class="Dialog" title="データ">
