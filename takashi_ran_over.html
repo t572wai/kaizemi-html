@@ -97,7 +97,7 @@
 						{
 							text:"はい",
 							click: function () {
-								localStorage[$('#SaveName').val()] = $('#DataToText').val();
+								localStorage[$('#SaveName').val()+'takashi_ran_over'] = $('#DataToText').val();
 								console.log($('#SaveName').val());
 								console.log($('#DataToText').val());
 								$('#DoSaveDialog').dialog('close');
@@ -228,7 +228,7 @@
 
 			function SaveData() {
 				if (typeof(getJson)=='undefined') {
-					localStorage[$('#SaveName').val()] = $('#DataToText').val();
+					localStorage[$('#SaveName').val()+'takashi_ran_over'] = $('#DataToText').val();
 					console.log($('#SaveName').val());
 					console.log($('#DataToText').val());
 					// alert("エラー");
@@ -258,7 +258,7 @@
 			}
 
 			function LoadData() {
-				let getJson = localStorage[$('#LoadDataName').val()];
+				let getJson = localStorage[$('#LoadDataName').val()+'takashi_ran_over'];
 				// let settingData = JSON.parse(getJson);
 				console.log($('#LoadDataName').val());
 				console.log(getJson);
