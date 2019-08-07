@@ -239,15 +239,15 @@
 			}
 
 			function SaveData() {
-				let getJson = localStorage[$('#SaveName').val()+'takashi_ran_over'];
+				let getJson = localStorage.getItem($('#SaveName').val()+'takashi_ran_over');
 				console.log(getJson);
-				if (getJson===null) {
+				if (getJson || JSON.parse(getJson)) {
+					$('#DoSaveDialog').dialog('open');
+				}else {
 					localStorage[$('#SaveName').val()+'takashi_ran_over'] = $('#DataToText').val();
 					console.log($('#SaveName').val());
 					console.log($('#DataToText').val());
 					// alert("エラー");
-				}else {
-					$('#DoSaveDialog').dialog('open');
 				}
 				// postForm($('#DataToText').val());
 			}
@@ -272,16 +272,17 @@
 			}
 
 			function LoadData() {
-				let getJson = localStorage[$('#LoadDataName').val()+'takashi_ran_over'];
+				let getJson = localStorage.getItem($('#LoadDataName').val()+'takashi_ran_over');
 				// let settingData = JSON.parse(getJson);
 				console.log($('#LoadDataName').val());
+				// getJson = JSON.parse(getJson);
 				console.log(getJson);
-				if (typeof(getJson)=='undefined') {
-					alert("エラー");
-				}else {
+				if (getJson || JSON.parse(getJson)) {
 					let data = getJson;
 					$('#TextToData').val(data);
 					console.log(data);
+				}else {
+					alert("エラー");
 				}
 			}
 		</script>
