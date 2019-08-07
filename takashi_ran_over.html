@@ -101,6 +101,7 @@
 								console.log($('#SaveName').val());
 								console.log($('#DataToText').val());
 								$('#DoSaveDialog').dialog('close');
+								$('#DataToTextDialog').dialog('close');
 							}
 						},
 						{
@@ -247,6 +248,7 @@
 					localStorage[$('#SaveName').val()+'takashi_ran_over'] = $('#DataToText').val();
 					console.log($('#SaveName').val());
 					console.log($('#DataToText').val());
+					$('#DataToTextDialog').dialog('close');
 					// alert("エラー");
 				}
 				// postForm($('#DataToText').val());
