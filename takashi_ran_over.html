@@ -97,13 +97,16 @@
 						{
 							text:"はい",
 							click: function () {
-
+								localStorage[$('#SaveName').val()] = $('#DataToText').val();
+								console.log($('#SaveName').val());
+								console.log($('#DataToText').val());
+								$('#DoSaveDialog').dialog('close');
 							}
 						},
 						{
 							text: "いいえ",
 							click: function () {
-
+								$('#DoSaveDialog').dialog('close');
 							}
 						}
 					]
@@ -224,10 +227,15 @@
 			}
 
 			function SaveData() {
-				// localStorage[$('#SaveName').val()] = $('#DataToText').val();
-				// console.log($('#SaveName').val());
-				// console.log($('#DataToText').val());
-				postForm($('#DataToText').val());
+				if (typeof(getJson)=='undefined') {
+					localStorage[$('#SaveName').val()] = $('#DataToText').val();
+					console.log($('#SaveName').val());
+					console.log($('#DataToText').val());
+					// alert("エラー");
+				}else {
+					$('#DoSaveDialog').dialog('open');
+				}
+				// postForm($('#DataToText').val());
 			}
 
 			function postForm(value) {
