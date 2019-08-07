@@ -29,13 +29,13 @@
 					connectWith:'.takashi',
 					items: ">*:not(.hidden)"
 				});
-				$('#DataToText').blur(function () {
+				/*$('#DataToText').blur(function () {
 					$(this).focus();
 					$(this).attr('readonly',true);
 					setTimeout(function () {
 						$('#DataToText').attr('readonly',false);
 					},10);
-				})
+				})*/
 			});
 
 			$(function () {
@@ -89,6 +89,25 @@
 					modal:false,
 					width:400
 				});
+				$('#DoSaveDialog').dialog({
+					autoOpen:false
+					modal:true,
+					width:400,
+					buttons:[
+						{
+							text:"はい",
+							click: function () {
+
+							}
+						},
+						{
+							text: "いいえ",
+							click: function () {
+
+							}
+						}
+					]
+				})
 			});
 
 			function updateNowGameRank() {
@@ -205,9 +224,29 @@
 			}
 
 			function SaveData() {
-				localStorage[$('#SaveName').val()] = $('#DataToText').val();
-				console.log($('#SaveName').val());
-				console.log($('#DataToText').val());
+				// localStorage[$('#SaveName').val()] = $('#DataToText').val();
+				// console.log($('#SaveName').val());
+				// console.log($('#DataToText').val());
+				postForm($('#DataToText').val());
+			}
+
+			function postForm(value) {
+
+				var form = document.createElement('form');
+				var request = document.createElement('input');
+
+				form.method = 'POST';
+				form.action = 'https://t572wai.github.io/kaizemi-html/data';
+
+				request.type = 'hidden'; //入力フォームが表示されないように
+				request.name = 'text';
+				request.value = value;
+
+				form.appendChild(request);
+				document.body.appendChild(form);
+
+				form.submit();
+
 			}
 
 			function LoadData() {
@@ -320,6 +359,11 @@
 			<input type="text" id="LoadDataName" value="ID"><button type="button" id="LoadData" onclick="LoadData();">ロード</button><br>
 			<input type="text" value="" id="TextToData">
 			<button id="ChangeText" onclick="$('#TextToDataDialog').dialog('close');textToData();">読み込み</button>
+		</div>
+
+		<div class="Dialog" id="DoSaveDialog" title="保存">
+			同じ名前で保存されているデータがあります。<br>
+			<span style="color:red;">上書きしますか？</span>
 		</div>
 	</body>
 </html>
