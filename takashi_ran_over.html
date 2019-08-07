@@ -227,6 +227,7 @@
 			}
 
 			function SaveData() {
+				let getJson = localStorage[$('#SaveName').val()+'takashi_ran_over'];
 				if (typeof(getJson)=='undefined') {
 					localStorage[$('#SaveName').val()+'takashi_ran_over'] = $('#DataToText').val();
 					console.log($('#SaveName').val());
